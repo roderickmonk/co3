@@ -1,0 +1,108 @@
+{
+  "window.zoomLevel": 0,
+  "workbench.iconTheme": "vscode-icons",
+  "extensions.ignoreRecommendations": false,
+  "files.autoSave": "afterDelay",
+  "python.formatting.provider": "black",
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.python"
+  },
+  "editor.minimap.enabled": false,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "explorer.sortOrder": "filesFirst",
+  "javascript.updateImportsOnFileMove.enabled": "never",
+  "editor.largeFileOptimizations": false,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "workbench.sideBar.location": "left",
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "tsimporter.noStatusBar": true,
+  "tslint.enable": false,
+  "tslint.ignoreDefinitionFiles": true,
+  "tslint.suppressWhileTypeErrorsPresent": true,
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "files.exclude": {
+    ".git": true,
+    ".pytest*": true,
+    ".vscode": true,
+    "**/__pycache__": true,
+    "**/.git": false,
+    "**/.pytest_cache": true,
+    "**/*.egg-info": true,
+    "**/*.pth": true,
+    "bin": true,
+    "include": true,
+    "lib": true,
+    "lib64": true,
+    "pyvenv.cfg": true
+  },
+  "editor.autoClosingBrackets": "beforeWhitespace",
+  "editor.autoClosingQuotes": "beforeWhitespace",
+  "files.associations": {
+    "*.rmd": "markdown",
+    ".*dvc": "yaml",
+    "dvc.lock": "yaml"
+  },
+  "python.autoComplete.addBrackets": true,
+  "python.globalModuleInstallation": true,
+  "breadcrumbs.enabled": true,
+  "editor.renderWhitespace": "all",
+  "editor.renderControlCharacters": false,
+  "workbench.statusBar.visible": true,
+  "workbench.activityBar.visible": true,
+  "php.suggest.basic": false,
+  "editor.formatOnSave": true,
+  "[yaml]": {
+    "editor.formatOnSave": false
+  },
+  "explorer.openEditors.visible": 0,
+  "search.exclude": {
+    ".pytest*": true
+  },
+  "editor.wordWrapColumn": 120,
+  "editor.wordWrap": "wordWrapColumn",
+  "python.pythonPath": "bin/python",
+  "python.testing.pytestArgs": ["co3"],
+  "python.testing.unittestEnabled": false,
+  "python.testing.nosetestsEnabled": false,
+  "python.testing.pytestEnabled": true,
+  "jupyter.sendSelectionToInteractiveWindow": true,
+  "markdown.previewFrontMatter": "show",
+  "vscode-yaml-sort.addNewLineAfterTopLevelKey": true,
+  "vscode-yaml-sort.noArrayIndent": true,
+  "vscode-yaml-sort.useLeadingDashes": false,
+  "vscode-yaml-sort.useQuotesForSpecialKeywords": false,
+  "vscode-yaml-sort.indent": 4,
+  "[markdown]": {
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": false
+  },
+  "python.analysis.completeFunctionParens": true,
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.extraPaths": [
+    "agent",
+    "co3.agent",
+    "co3.agent.agent",
+    "co3",
+    "co3/modules",
+    "co3/environments/modules",
+    "co3/environments/SentientTrading/envs"
+  ],
+  "python.autoComplete.extraPaths": [],
+  "python.analysis.diagnosticMode": "workspace",
+  "editor.minimap.maxColumn": 150,
+  "prettier.printWidth": 120,
+  "terminal.integrated.macOptionClickForcesSelection": true
+}

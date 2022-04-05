@@ -1,0 +1,13 @@
+#!/bin/bash
+
+export CO3_PATH=$HOME/$1;
+python3.9 -m venv .;
+soure ./bin/activate
+pip install -U pip;
+source project; 
+pip install wheel; 
+pip install cmake; 
+pip install -r requirements.txt; 
+pip install -e $HOME/gym-copter;
+PYTHONOPTIMIZE= pytest -x --disable-warnings co3/tests/general --log-cli-level=ERROR --log-cli-format="%(asctime)-15s %(message)s" --log-date-format="%Y-%m-%d %H:%M:%S";
+PYTHONOPTIMIZE= pytest -x co3/tests/orderbook-vectors;

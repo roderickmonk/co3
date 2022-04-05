@@ -1,0 +1,112 @@
+name: co3 deploy
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  TARGET: co3_github_actions
+
+jobs:
+  deploy_dl:
+    runs-on: ubuntu-latest
+
+
+    steps:
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1.5.11
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - uses: actions/checkout@v2
+
+      - name: Start ds1
+        uses: nick-invision/retry@v2
+        with:
+          timeout_seconds: 30
+          max_attempts: 200
+          retry_on: error
+          command: aws ec2 start-instances --instance-ids ${{ secrets.DS1_INSTANCE_ID }}
+
+      # Give sufficient time for ds1 to enter the Running state
+      - run: sleep 40s
+          
+      - name: Deploy to ds1
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
+          REMOTE_HOST: ${{ secrets.DS1 }}
+          REMOTE_USER: ${{ secrets.DEPLOY_USER }}
+          REMOTE_PORT: ${{ secrets.DEPLOY_PORT }}
+          SOURCE: .
+          TARGET: ${{ env.TARGET }}
+          EXCLUDE: .git/,Archive/,share/
+          ARGS: "--delete-excluded"
+
+
+      - name: Install and test on ds1
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DS1 }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          script_stop: true
+          command_timeout: 3600s
+          script:
+            echo $HOME;
+            source $HOME/${{ env.TARGET }}/.github/workflows/test_script ${{ env.TARGET }};
+
+      # Stop dl
+      # - run: aws ec2 stop-instances --instance-ids ${{ secrets.DL_INSTANCE_ID }}; echo "dl Stopped"
+
+  # deploy_ds1:
+  #   runs-on: ubuntu-latest
+  #   steps:
+
+  #     - name: Configure AWS credentials
+  #       uses: aws-actions/configure-aws-credentials@v1.5.11
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: ${{ secrets.AWS_REGION }}
+
+  #     - name: Start ds1
+  #       uses: nick-invision/retry@v2
+  #       with:
+  #         timeout_seconds: 120
+  #         max_attempts: 100
+  #         retry_on: error
+  #         command: aws ec2 start-instances --instance-ids ${{ secrets.DS1_INSTANCE_ID }}
+
+  #     - run: sleep 10s
+
+  #     - uses: actions/checkout@v2
+
+  #     - name: Deploy to ds1 /shared/co3
+  #       uses: easingthemes/ssh-deploy@main
+  #       env:
+  #         SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
+  #         REMOTE_HOST: ${{ secrets.DS1 }}
+  #         REMOTE_USER: ${{ secrets.DEPLOY_USER }}
+  #         REMOTE_PORT: ${{ secrets.DEPLOY_PORT }}
+  #         SOURCE: .
+  #         TARGET: ${{ env.TARGET }}
+  #         EXCLUDE: .git/,Archive/,share/
+  #         ARGS: "--delete-excluded"
+
+  #     - name: Run pytests on ds1
+  #       uses: appleboy/ssh-action@master
+  #       with:
+  #         host: ${{ secrets.DS1 }}
+  #         username: ${{ secrets.DEPLOY_USER }}
+  #         key: ${{ secrets.DEPLOY_KEY }}
+  #         port: ${{ secrets.DEPLOY_PORT }}
+  #         script_stop: true
+  #         script:
+  #           source $HOME/${{ env.TARGET }}/.github/workflows/test_script ${{ env.TARGET }};
+

@@ -1,0 +1,53 @@
+name: Run tests
+
+on:
+  push:
+    branches:
+      - "master"
+       
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        # Run in all these versions of Python
+        python-version: [3.9]
+
+    steps:
+        # Checkout the latest code from the repo
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: true
+
+      - uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_KEY }}
+
+      - name: Set Up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
+
+      - name: Install libhdf5-dev
+        run: sudo apt install libhdf5-dev
+
+      - name: Install Python packages
+        run: |
+          python -m venv . --prompt co3
+          source ./bin/activate
+          python -m pip install --upgrade pip
+          pip install cmake pytest wheel h5py
+          pip install -r requirements.txt
+        # git config --global url."git+ssh://git@github.com/".insteadOf git+ssh://git@github.com:          
+        # git config --global url."https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github".insteadOf https://github
+
+
+      - name: Run tests
+        run: |
+          source project
+          PYTHONOPTIMIZE= pytest -x --disable-warnings co3/tests/general --log-cli-level=ERROR --log-cli-format="%(asctime)-15s %(message)s" --log-date-format="%Y-%m-%d %H:%M:%S"
